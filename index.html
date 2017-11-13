@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>js-图片切换的两种模式</title>
+<style>
+*{padding:0;margin:0;list-style:none;}
+/*选项*/
+#option{
+	width: 900px;
+	height: 120px;
+	border:3px solid orange;
+	margin:auto;
+	text-align:center;
+	position:relative;
+}
+#option button{
+	width: 150px;
+	height: 35px;
+	font-size:25px;
+}
+#option p{
+	font-size:20px;
+	position:absolute;
+	bottom:20px;
+	left:50%;
+	transform: translate(-50%,0);
+}
+/*先让顺序的提示文字显示，让循环的提示文字隐藏*/
+#xh_txt{
+	display:none;
+}
+
+#content{
+	width: 900px;
+	height: 500px;
+	margin:auto;
+	position:relative;
+}
+#content span{
+	position:absolute;
+	top:0;
+	width:100px;
+	height: 500px;
+	text-align:center;
+	line-height: 500px;
+	opacity:.0; 
+	background: rgba(0,0,0,.1);
+	font-size:80px;
+	z-index:15;
+}
+#content:hover span{
+	opacity:1;
+	background: rgba(0,0,0,.6);
+	color:#fff;
+	cursor:pointer;
+}
+#content span:nth-of-type(1){
+	left:0;
+}
+#content span:nth-of-type(2){
+	right:0;
+}
+#content .box,
+#content .box img{
+	width: 100%;
+	height:500px;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:12;
+}
+#content .box img{
+	z-index:15;
+}
+#content p{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background:rgba(0,0,0,.5); 
+	position:absolute;
+	left:0;
+	color:#fff;
+	z-index:15;
+	text-align:center;
+	font-size:20px; 
+}
+#content p:nth-of-type(1){
+	top:0;
+}
+#content p:nth-of-type(2){
+	bottom:0;
+}
+
+
+</style>
+
+<script>
+window.onload=function(){
+	var con = document.getElementById('content');
+	var sx = document.getElementById('shunxu');
+	var xh = document.getElementById('xunhuan');
+	var pic = con.getElementsByClassName('pic')[0];
+	var prev= con.getElementsByClassName('prev')[0];
+	var next= con.getElementsByClassName('next')[0];
+	var num = con.getElementsByClassName('num')[0];
+	var txt = con.getElementsByClassName('txt')[0];
+
+	var arrpic = ['img/1.jpg','img/2.jpg','img/3.jpg','img/4.jpg','img/5.jpg'];
+	var arrtxt = ['图片1','图片2','图片3','图片4','图片5'];
+	var n=0;
+
+	//初始化
+	 pic.src = arrpic[n];
+	 txt.innerHTML = arrtxt[n];
+	 num.innerHTML = n+1+' / '+ arrpic.length;
+
+	 //循环模式
+	 function xunhuan(){
+		//下一页
+		next.onclick=function (){
+			n++;
+			if(n==arrpic.length){
+				n=0;
+			}
+			pic.src=arrpic[n];
+			txt.innerHTML = arrtxt[n];
+			num.innerHTML = n+1+' / '+arrpic.length;
+		}	
+		prev.onclick=function(){
+			n--;
+			if(n<0){
+				n=arrpic.length-1;
+			}
+			pic.src=arrpic[n];
+			txt.innerHTML = arrtxt[n];
+			num.innerHTML = n+1+ ' / '+ arrpic.length;
+		}
+	}		
+	xunhuan();
+
+
+	function shunxu(){
+		next.onclick=function (){
+			n++;
+			if(n==arrpic.length){
+				n=arrpic.length-1;
+				alert('已经是最后一张图片了!');
+			}
+			pic.src=arrpic[n];
+			txt.innerHTML = arrtxt[n];
+			num.innerHTML = n+1+' / '+arrpic.length;
+		}	
+		prev.onclick=function(){
+			n--;
+			if(n<0){
+				n=0;
+				alert('已经是第一张图片了');
+			}
+			pic.src=arrpic[n];
+			txt.innerHTML = arrtxt[n];
+			num.innerHTML = n+1+ ' / '+ arrpic.length;
+		}
+	}
+	shunxu();
+
+	// 当点击顺序播放的时候，播放到最后就会停止
+	sx.onclick=function(){
+		document.getElementById('sx_txt').style.display='block';
+		document.getElementById('xh_txt').style.display='none';
+		shunxu();
+	}
+	//当点击到最后的时候，再次点击会循环到第一个
+	xh.onclick=function(){
+		document.getElementById('xh_txt').style.display='block';
+		document.getElementById('sx_txt').style.display='none';
+		xunhuan();
+	}	
+
+
+
+}
+</script>
+</head>
+<body>
+<div id="option">
+	<button id='shunxu'>顺序播放</button>
+	<button id='xunhuan'>循环播放</button>
+	<p id="sx_txt">一直点击到最后一项，就无法在点击下一个了。只能点击上一个</p>
+	<p id="xh_txt">一直点击到最后一项，再次点击下一个就会直接跳转到第一个</p>
+</div>
+<p id="xh_txt"></p>
+<div id="content">
+	<span class='prev'>&lt;</span>
+	<span class='next'>&gt;</span>
+	<p class='num'>数量正在计算中...</p>
+	<p class='txt'>文字正在计算中...</p>
+	<div class="box"><img src="img/3.jpg" class='pic'></div>
+</div>
+
+	
+</body>
+</html>
